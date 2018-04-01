@@ -453,8 +453,8 @@ public class MovieSet extends MediaEntity {
         }
       }
 
-      // fallback
-      return 0;
+      // fallback: sort via title
+      return o2.getTitleForUi().compareTo(o1.getTitleForUi());
     }
   }
 }
