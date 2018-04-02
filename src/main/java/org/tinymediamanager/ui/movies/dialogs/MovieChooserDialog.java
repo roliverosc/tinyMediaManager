@@ -723,7 +723,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
     public void done() {
       if (!cancel) {
         moviesFound.clear();
-        if (searchResult == null || searchResult.size() == 0) {
+        if (searchResult == null || searchResult.isEmpty()) {
           // display empty result
           moviesFound.add(MovieChooserModel.emptyResult);
         }
@@ -737,7 +737,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
             // get metadataProvider from searchresult
           }
         }
-        if (moviesFound.size() == 1) { // only one result
+        if (!moviesFound.isEmpty()) {
           table.setRowSelectionInterval(0, 0); // select first row
         }
       }

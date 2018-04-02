@@ -320,7 +320,7 @@ public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
           options.setLanguage(LocaleUtils.toLocale(MovieModuleManager.MOVIE_SETTINGS.getScraperLanguage().name()));
           List<MediaSearchResult> movieSets = mp.search(options);
           movieSetsFound.clear();
-          if (movieSets.size() == 0) {
+          if (movieSets.isEmpty()) {
             movieSetsFound.add(MovieSetChooserModel.emptyResult);
           }
           else {
@@ -329,6 +329,10 @@ public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
               movieSetsFound.add(model);
             }
           }
+        }
+
+        if (!movieSetsFound.isEmpty()) {
+          tableMovieSets.setRowSelectionInterval(0, 0); // select first row
         }
       }
       catch (Exception e1) {

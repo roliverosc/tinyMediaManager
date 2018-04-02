@@ -525,7 +525,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
       startProgressBar(BUNDLE.getString("chooser.searchingfor") + " " + searchTerm); //$NON-NLS-1$
       List<MediaSearchResult> searchResult = tvShowList.searchTvShow(searchTerm, show, mediaScraper, language);
       tvShowsFound.clear();
-      if (searchResult.size() == 0) {
+      if (searchResult.isEmpty()) {
         // display empty result
         tvShowsFound.add(TvShowChooserModel.emptyResult);
       }
@@ -539,7 +539,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
         }
       }
 
-      if (tvShowsFound.size() == 1) { // only one result
+      if (!tvShowsFound.isEmpty()) {
         table.setRowSelectionInterval(0, 0); // select first row
       }
 
@@ -555,7 +555,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
   private class ScrapeTask extends SwingWorker<Void, Void> {
     private TvShowChooserModel model;
 
-    public ScrapeTask(TvShowChooserModel model) {
+    private ScrapeTask(TvShowChooserModel model) {
       this.model = model;
     }
 
@@ -639,7 +639,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
   private class ChangeScraperAction extends AbstractAction {
     private static final long serialVersionUID = -3537728352474538431L;
 
-    public ChangeScraperAction() {
+    private ChangeScraperAction() {
     }
 
     @Override
