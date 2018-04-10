@@ -893,6 +893,9 @@ public class ImageChooserDialog extends TmmDialog {
         panelImages.add(lblNothingFound);
         panelImages.validate();
         panelImages.getParent().validate();
+        // auto-close if none found
+        task.cancel(true);
+        setVisible(false);
       }
       SwingUtilities.invokeLater(new Runnable() {
         @Override
