@@ -4,6 +4,7 @@ Version 2.9.9
 x several fixes in the OSX starter script
 x fix opening of dialogs without parents
 x fix occasional errors on closing
+x fix downloading extrafanart/extrathumbs after network failures
 
 Version 2.9.8
 =======================
