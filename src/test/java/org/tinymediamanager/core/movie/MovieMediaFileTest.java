@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,15 +45,29 @@ public class MovieMediaFileTest extends BasicTest {
       MediaFile cl = cleanup.get(0);
       System.out.println("MF2 in list, but '" + cl.getFileAsPath() + "' not in there");
 
-      if (Files.exists(cl.getFileAsPath())) {
-        // mac/linux
-        // TBD
+      if (!containsSameNameMF(needed, cl)) {
+        System.out.println("Would delete " + cl.getFileAsPath());
+      }
+      else {
+        System.out.println("Found same MF with different case - better not delete!");
       }
     }
     else {
       // WIN impl says, both are same, so
       System.out.println("MF1 == MF2 - no cleanup needed");
     }
+  }
+
+  private boolean containsSameNameMF(List<MediaFile> mfs, MediaFile check) {
+    if (mfs == null || mfs.size() == 0) {
+      return false;
+    }
+    for (MediaFile mf : mfs) {
+      if (mf.getFileAsPath().toString().toLowerCase(Locale.ROOT).equals(check.getFileAsPath().toString().toLowerCase(Locale.ROOT))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Test
