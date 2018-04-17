@@ -1467,6 +1467,32 @@ public class Utils {
   }
 
   /**
+   * get all files from the given path
+   *
+   * @param root
+   *          the root folder to search files for
+   * @return a list of all found files
+   */
+  public static List<Path> findFiles(Path root) {
+    final List<Path> filesFound = new ArrayList<>();
+    if (!Files.isDirectory(root)) {
+      return filesFound;
+    }
+    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(root)) {
+      for (Path path : directoryStream) {
+        if (Files.isRegularFile(path)) {
+          filesFound.add(path);
+        }
+      }
+    }
+    catch (IOException e) {
+      LOGGER.warn("could not get a file listing: " + e.getMessage());
+    }
+
+    return filesFound;
+  }
+
+  /**
    * get all files from the given path recursive
    * 
    * @param root
@@ -1482,7 +1508,9 @@ public class Utils {
       Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-          filesFound.add(file);
+          if (Files.isRegularFile(file)) {
+            filesFound.add(file);
+          }
           return FileVisitResult.CONTINUE;
         }
       });

@@ -550,11 +550,23 @@ public class MovieRenamer {
     // ## CLEANUP - delete all files marked for cleanup, which are not "needed"
     // ######################################################################
     LOGGER.info("Cleanup...");
-    List<Path> existingFiles = Utils.findFilesRecursive(movie.getPathNIO());
+
+    // get all existing files in the movie dir, since Files.exist is not reliable in OSX
+    List<Path> existingFiles;
+    if (movie.isMultiMovieDir()) {
+      // no recursive search in MMD needed
+      existingFiles = Utils.findFiles(movie.getPathNIO());
+    }
+    else {
+      // search all files recursive for deeper cleanup
+      existingFiles = Utils.findFilesRecursive(movie.getPathNIO());
+    }
+
     for (int i = cleanup.size() - 1; i >= 0; i--) {
+      MediaFile cl = cleanup.get(i);
+
       // cleanup files which are not needed
-      if (!needed.contains(cleanup.get(i))) {
-        MediaFile cl = cleanup.get(i);
+      if (!needed.contains(cl)) {
         if (cl.getFileAsPath().equals(Paths.get(movie.getDataSource())) || cl.getFileAsPath().equals(movie.getPathNIO())
             || cl.getFileAsPath().equals(Paths.get(oldPathname))) {
           LOGGER.warn("Wohoo! We tried to remove complete datasource / movie folder. Nooo way...! " + cl.getType() + ": " + cl.getFileAsPath());
@@ -578,7 +590,7 @@ public class MovieRenamer {
             Files.delete(cl.getFileAsPath().getParent()); // do not use recursive her
           }
         }
-        catch (IOException ex) {
+        catch (IOException ignored) {
         }
       }
     }
