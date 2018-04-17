@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -453,8 +453,8 @@ public class MovieSet extends MediaEntity {
         }
       }
 
-      // fallback
-      return 0;
+      // fallback: sort via title
+      return o2.getTitleForUi().compareTo(o1.getTitleForUi());
     }
   }
 }

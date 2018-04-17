@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public class AboutDialog extends TmmDialog {
       contentPanel.add(lblTinymediamanager, "4, 2, 3, 1, center, default");
     }
     {
-      JLabel lblByManuel = new JLabel("\u00A9 2012 - 2016 by Manuel Laggner"); //$NON-NLS-1$
+      JLabel lblByManuel = new JLabel("\u00A9 2012 \u2013 2018 by Manuel Laggner"); //$NON-NLS-1$
       contentPanel.add(lblByManuel, "4, 4, 3, 1, center, default");
     }
     {

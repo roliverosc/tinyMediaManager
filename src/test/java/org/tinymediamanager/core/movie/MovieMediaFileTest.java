@@ -1,7 +1,12 @@
 package org.tinymediamanager.core.movie;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,6 +22,52 @@ public class MovieMediaFileTest extends BasicTest {
   @BeforeClass
   public static void beforeClass() {
     Settings.getInstance(getSettingsFolder());
+  }
+
+  @Test
+  public void renameSameNameOtherCase() throws IOException {
+    MediaFile mf1 = new MediaFile(Paths.get("./movie.mkv"));
+    MediaFile mf2 = new MediaFile(Paths.get("./Movie.mkv"));
+    System.out.println("MF1: " + mf1.getFileAsPath());
+    System.out.println("MF2: " + mf2.getFileAsPath());
+
+    // true on Windows, comparing "Path" object
+    System.out.println("Is same file? " + Files.isSameFile(mf1.getFileAsPath(), mf2.getFileAsPath()));
+    System.out.println("Is equals() ? " + mf1.equals(mf2));
+
+    ArrayList<MediaFile> cleanup = new ArrayList<>();
+    ArrayList<MediaFile> needed = new ArrayList<>();
+    cleanup.add(mf1);
+    needed.add(mf2);
+
+    // contains also done via "Path" impl
+    if (!needed.contains(cleanup.get(0))) {
+      MediaFile cl = cleanup.get(0);
+      System.out.println("MF2 in list, but '" + cl.getFileAsPath() + "' not in there");
+
+      if (!containsSameNameMF(needed, cl)) {
+        System.out.println("Would delete " + cl.getFileAsPath());
+      }
+      else {
+        System.out.println("Found same MF with different case - better not delete!");
+      }
+    }
+    else {
+      // WIN impl says, both are same, so
+      System.out.println("MF1 == MF2 - no cleanup needed");
+    }
+  }
+
+  private boolean containsSameNameMF(List<MediaFile> mfs, MediaFile check) {
+    if (mfs == null || mfs.size() == 0) {
+      return false;
+    }
+    for (MediaFile mf : mfs) {
+      if (mf.getFileAsPath().toString().toLowerCase(Locale.ROOT).equals(check.getFileAsPath().toString().toLowerCase(Locale.ROOT))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Test

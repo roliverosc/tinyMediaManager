@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1282,10 +1282,18 @@ public class TvShowEditorDialog extends TmmDialog {
   @Override
   public void dispose() {
     super.dispose();
-    jTableBinding.unbind();
-    jListBinding.unbind();
-    jListBinding_1.unbind();
-    jTableBinding_2.unbind();
+    if (jTableBinding.isBound()) {
+      jTableBinding.unbind();
+    }
+    if (jListBinding.isBound()) {
+      jListBinding.unbind();
+    }
+    if (jListBinding_1.isBound()) {
+      jListBinding_1.unbind();
+    }
+    if (jTableBinding_2.isBound()) {
+      jTableBinding_2.unbind();
+    }
     dpPremiered.cleanup();
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,6 +121,7 @@ public class TvShowTest extends BasicTest {
 
     // ************************************************************************
     // various real world examples
+    assertEqual("S:1 E:101", detectEpisode("Eisenbahn-Romantik.S01.E101.mp4"));
     assertEqual("S:2011", detectEpisode("Game of Thrones\\2011-04-17 - Winter Is Coming.avi"));
     assertEqual("S:2011", detectEpisode("Game of Thrones\\17.04.2011 - Winter Is Coming.avi"));
     assertEqual("S:5 E:1", detectEpisode("Breaking Bad S05E01 S05E02 HDTV XViD-xyz\\E01 - Live Free or Die.avi"));

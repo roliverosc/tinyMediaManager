@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,8 @@
  */
 package org.tinymediamanager.core;
 
-import java.awt.GraphicsEnvironment;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -52,7 +50,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,11 +62,8 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tinymediamanager.Globals;
 import org.tinymediamanager.LaunchUtil;
-import org.tinymediamanager.ReleaseInfo;
 import org.tinymediamanager.core.Message.MessageLevel;
-import org.tinymediamanager.scraper.http.Url;
 import org.tinymediamanager.scraper.util.StrgUtils;
 
 /**
@@ -454,88 +448,6 @@ public class Utils {
     if (str == null)
       return null;
     return str.replaceFirst("^\\\"(.*)\\\"$", "$1");
-  }
-
-  /**
-   * Starts a thread and does a "ping" on our tracking server, sending the event (and the random UUID + some env vars).<br>
-   * use "startup" / "shutdown" for tracking sessions
-   * 
-   * @param event
-   *          The event for the GET request
-   */
-  public static void trackEvent(final String event) {
-    // should we track the event?
-    Path disable = Paths.get("tmm.uuid.disable");
-    if (Globals.settings.isEnableAnalytics() && !Files.exists(disable)) {
-      new Thread(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            Thread.currentThread().setName("trackEventThread");
-            Path uuidFile = Paths.get("tmm.uuid");
-
-            if (!Files.exists(uuidFile)) {
-              writeStringToFile(uuidFile, UUID.randomUUID().toString());
-            }
-
-            if (Files.exists(uuidFile)) {
-              String uuid = readFileToString(uuidFile);
-              System.setProperty("tmm.uuid", uuid);
-
-              String session = "";
-              if ("startup".equals(event)) {
-                session = "&sc=start";
-              }
-              else if ("shutdown".equals(event)) {
-                session = "&sc=end";
-              }
-
-              // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
-              // @formatter:off
-              String ga = "v=1"
-                  + "&tid=UA-35564534-5"
-                  + "&cid=" + uuid 
-                  + "&an=tinyMediaManager" 
-                  + "&av=" + ReleaseInfo.getVersionForReporting() // project version OR git/nightly/prerel string
-                  + "&t=event"
-                  + "&ec=" + event
-                  + "&ea=" + event 
-                  + "&aip=1" 
-                  + "&je=1"
-                  + session
-                  + "&ul=" + getEncProp("user.language") + "-" + getEncProp("user.country")  // use real system language
-                  + "&vp=" + TmmProperties.getInstance().getPropertyAsInteger("mainWindowW") + "x" + TmmProperties.getInstance().getPropertyAsInteger("mainWindowH")
-                  + "&cd1=" + getEncProp("os.name") 
-                  + "&cd2=" + getEncProp("os.arch") 
-                  + "&cd3=" + getEncProp("java.specification.version") // short; eg 1.7
-                  + "&cd4=" + ReleaseInfo.getVersion() // TMM version eg 2.5.5
-                  + "&cd5=" + (Globals.isDonator() ? "1" : "0")
-                  + "&z=" + System.currentTimeMillis();
-              if (!GraphicsEnvironment.isHeadless()) {
-                ga += "&sr=" + java.awt.Toolkit.getDefaultToolkit().getScreenSize().width + "x" + java.awt.Toolkit.getDefaultToolkit().getScreenSize().height; 
-              }
-              // @formatter:on
-              Url url = new Url("https://ssl.google-analytics.com/collect?" + ga);
-
-              InputStream in = url.getInputStream();
-              if (in != null) {
-                try {
-                  in.close();
-                }
-                catch (Exception ignored) {
-                }
-              }
-            }
-          }
-          catch (RuntimeException e) {
-            throw e;
-          }
-          catch (Exception e) {
-            LOGGER.warn("could not ping our update server...");
-          }
-        }
-      }).start();
-    }
   }
 
   /**
@@ -1552,6 +1464,62 @@ public class Utils {
     }
     catch (IOException ex) {
     }
+  }
+
+  /**
+   * get all files from the given path
+   *
+   * @param root
+   *          the root folder to search files for
+   * @return a list of all found files
+   */
+  public static List<Path> findFiles(Path root) {
+    final List<Path> filesFound = new ArrayList<>();
+    if (!Files.isDirectory(root)) {
+      return filesFound;
+    }
+    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(root)) {
+      for (Path path : directoryStream) {
+        if (Files.isRegularFile(path)) {
+          filesFound.add(path);
+        }
+      }
+    }
+    catch (IOException e) {
+      LOGGER.warn("could not get a file listing: " + e.getMessage());
+    }
+
+    return filesFound;
+  }
+
+  /**
+   * get all files from the given path recursive
+   * 
+   * @param root
+   *          the root folder to search files for
+   * @return a list of all found files
+   */
+  public static List<Path> findFilesRecursive(Path root) {
+    final List<Path> filesFound = new ArrayList<>();
+    if (!Files.isDirectory(root)) {
+      return filesFound;
+    }
+    try {
+      Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+          if (Files.isRegularFile(file)) {
+            filesFound.add(file);
+          }
+          return FileVisitResult.CONTINUE;
+        }
+      });
+    }
+    catch (Exception e) {
+      LOGGER.warn("could not get a file listing: " + e.getMessage());
+    }
+
+    return filesFound;
   }
 
   /*

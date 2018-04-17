@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.tinymediamanager.core.ExportTemplate;
 import org.tinymediamanager.core.MediaEntityExporter.TemplateType;
 import org.tinymediamanager.core.Settings;
 import org.tinymediamanager.core.UpdaterTask;
-import org.tinymediamanager.core.Utils;
 import org.tinymediamanager.core.entities.MediaFile;
 import org.tinymediamanager.core.movie.MovieExporter;
 import org.tinymediamanager.core.movie.MovieList;
@@ -191,7 +190,7 @@ public class TinyMediaManagerCMD {
     // @formatter:off
     System.out.println("\n" +
         "=====================================================\n" +
-        "=== tinyMediaManager (c) 2012-2016 Manuel Laggner ===\n" +
+        "=== tinyMediaManager (c) 2012-2018 Manuel Laggner ===\n" +
         "=====================================================\n" +
         "\n" +
         "SYNTAX:    Windows:   tinyMediaManagerCMD.exe <parameters>\n" +
@@ -241,8 +240,6 @@ public class TinyMediaManagerCMD {
       if (scrapeNew || scrapeUnscraped || scrapeAll) {
         // only do an update check when we are scraping online
         // no need for a "forced" check for just updating the datasource
-        Utils.trackEvent("cmd");
-
         final SwingWorker<Boolean, Void> updateWorker = new UpdaterTask();
         updateWorker.run();
         updateAvailable = updateWorker.get(); // blocking

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -662,11 +662,21 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
       activeSearchTask.cancel();
     }
     super.dispose();
-    jTableBinding.unbind();
-    autoBinding.unbind();
-    autoBinding_1.unbind();
-    autoBinding_2.unbind();
-    autoBinding_3.unbind();
+    if (jTableBinding.isBound()) {
+      jTableBinding.unbind();
+    }
+    if (autoBinding.isBound()) {
+      autoBinding.unbind();
+    }
+    if (autoBinding_1.isBound()) {
+      autoBinding_1.unbind();
+    }
+    if (autoBinding_2.isBound()) {
+      autoBinding_2.unbind();
+    }
+    if (autoBinding_3.isBound()) {
+      autoBinding_3.unbind();
+    }
   }
 
   /******************************************************************************
@@ -713,7 +723,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
     public void done() {
       if (!cancel) {
         moviesFound.clear();
-        if (searchResult == null || searchResult.size() == 0) {
+        if (searchResult == null || searchResult.isEmpty()) {
           // display empty result
           moviesFound.add(MovieChooserModel.emptyResult);
         }
@@ -727,7 +737,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
             // get metadataProvider from searchresult
           }
         }
-        if (moviesFound.size() == 1) { // only one result
+        if (!moviesFound.isEmpty()) {
           table.setRowSelectionInterval(0, 0); // select first row
         }
       }

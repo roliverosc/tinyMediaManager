@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,27 +84,35 @@ import com.jgoodies.forms.layout.RowSpec;
  * @author Manuel Laggner
  */
 public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
-  private static final long           serialVersionUID = -1023959850452480592L;
+  private static final long                                                       serialVersionUID = -1023959850452480592L;
   /**
    * @wbp.nls.resourceBundle messages
    */
-  private static final ResourceBundle BUNDLE           = ResourceBundle.getBundle("messages", new UTF8Control());                    //$NON-NLS-1$
-  private static final Logger         LOGGER           = LoggerFactory.getLogger(MovieSetChooserDialog.class);
+  private static final ResourceBundle                                             BUNDLE           = ResourceBundle.getBundle("messages",              //$NON-NLS-1$
+      new UTF8Control());
+  private static final Logger                                                     LOGGER           = LoggerFactory
+      .getLogger(MovieSetChooserDialog.class);
 
-  private MovieSet                    movieSetToScrape;
-  private List<MovieSetChooserModel>  movieSetsFound   = ObservableCollections.observableList(new ArrayList<MovieSetChooserModel>());
-  private final Action                actionSearch     = new SearchAction();
-  private boolean                     continueQueue    = true;
+  private MovieSet                                                                movieSetToScrape;
+  private List<MovieSetChooserModel>                                              movieSetsFound   = ObservableCollections
+      .observableList(new ArrayList<MovieSetChooserModel>());
+  private final Action                                                            actionSearch     = new SearchAction();
+  private boolean                                                                 continueQueue    = true;
 
-  private JLabel                      lblProgressAction;
-  private JProgressBar                progressBar;
-  private JTextField                  tfMovieSetName;
-  private JTable                      tableMovieSets;
-  private JTextArea                   lblMovieSetName;
-  private ImageLabel                  lblMovieSetPoster;
-  private JTable                      tableMovies;
-  private JCheckBox                   cbAssignMovies;
-  private JButton                     btnOk;
+  private JLabel                                                                  lblProgressAction;
+  private JProgressBar                                                            progressBar;
+  private JTextField                                                              tfMovieSetName;
+  private JTable                                                                  tableMovieSets;
+  private JTextArea                                                               lblMovieSetName;
+  private ImageLabel                                                              lblMovieSetPoster;
+  private JTable                                                                  tableMovies;
+  private JCheckBox                                                               cbAssignMovies;
+  private JButton                                                                 btnOk;
+
+  private JTableBinding<MovieSetChooserModel, List<MovieSetChooserModel>, JTable> jTableBinding;
+  private JTableBinding<MovieInSet, JTable, JTable>                               jTableBinding_1;
+  private AutoBinding<JTable, String, JTextArea, String>                          autoBinding;
+  private AutoBinding<JTable, String, ImageLabel, String>                         autoBinding_1;
 
   /**
    * Instantiates a new movie set chooser panel.
@@ -312,7 +320,7 @@ public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
           options.setLanguage(LocaleUtils.toLocale(MovieModuleManager.MOVIE_SETTINGS.getScraperLanguage().name()));
           List<MediaSearchResult> movieSets = mp.search(options);
           movieSetsFound.clear();
-          if (movieSets.size() == 0) {
+          if (movieSets.isEmpty()) {
             movieSetsFound.add(MovieSetChooserModel.emptyResult);
           }
           else {
@@ -321,6 +329,10 @@ public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
               movieSetsFound.add(model);
             }
           }
+        }
+
+        if (!movieSetsFound.isEmpty()) {
+          tableMovieSets.setRowSelectionInterval(0, 0); // select first row
         }
       }
       catch (Exception e1) {
@@ -333,6 +345,24 @@ public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
     @Override
     public void done() {
       stopProgressBar();
+    }
+  }
+
+  @Override
+  public void dispose() {
+    super.dispose();
+
+    if (jTableBinding.isBound()) {
+      jTableBinding.unbind();
+    }
+    if (jTableBinding_1.isBound()) {
+      jTableBinding_1.unbind();
+    }
+    if (autoBinding.isBound()) {
+      autoBinding.unbind();
+    }
+    if (autoBinding_1.isBound()) {
+      autoBinding_1.unbind();
     }
   }
 
@@ -466,8 +496,7 @@ public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
    * Inits the data bindings.
    */
   protected void initDataBindings() {
-    JTableBinding<MovieSetChooserModel, List<MovieSetChooserModel>, JTable> jTableBinding = SwingBindings.createJTableBinding(UpdateStrategy.READ,
-        movieSetsFound, tableMovieSets);
+    jTableBinding = SwingBindings.createJTableBinding(UpdateStrategy.READ, movieSetsFound, tableMovieSets);
     //
     BeanProperty<MovieSetChooserModel, String> movieSetChooserModelBeanProperty = BeanProperty.create("name");
     jTableBinding.addColumnBinding(movieSetChooserModelBeanProperty).setEditable(false); // $NON-NLS-1$
@@ -475,8 +504,7 @@ public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
     jTableBinding.bind();
     //
     BeanProperty<JTable, List<MovieInSet>> jTableBeanProperty = BeanProperty.create("selectedElement.movies");
-    JTableBinding<MovieInSet, JTable, JTable> jTableBinding_1 = SwingBindings.createJTableBinding(UpdateStrategy.READ, tableMovieSets,
-        jTableBeanProperty, tableMovies);
+    jTableBinding_1 = SwingBindings.createJTableBinding(UpdateStrategy.READ, tableMovieSets, jTableBeanProperty, tableMovies);
     //
     BeanProperty<MovieInSet, String> movieInSetBeanProperty = BeanProperty.create("name");
     jTableBinding_1.addColumnBinding(movieInSetBeanProperty).setColumnName(BUNDLE.getString("tmm.movie")).setEditable(false); //$NON-NLS-1$
@@ -488,14 +516,12 @@ public class MovieSetChooserDialog extends TmmDialog implements ActionListener {
     //
     BeanProperty<JTable, String> jTableBeanProperty_1 = BeanProperty.create("selectedElement.name");
     BeanProperty<JTextArea, String> jTextAreaBeanProperty = BeanProperty.create("text");
-    AutoBinding<JTable, String, JTextArea, String> autoBinding = Bindings.createAutoBinding(UpdateStrategy.READ, tableMovieSets, jTableBeanProperty_1,
-        lblMovieSetName, jTextAreaBeanProperty);
+    autoBinding = Bindings.createAutoBinding(UpdateStrategy.READ, tableMovieSets, jTableBeanProperty_1, lblMovieSetName, jTextAreaBeanProperty);
     autoBinding.bind();
     //
     BeanProperty<JTable, String> jTableBeanProperty_2 = BeanProperty.create("selectedElement.posterUrl");
     BeanProperty<ImageLabel, String> imageLabelBeanProperty = BeanProperty.create("imageUrl");
-    AutoBinding<JTable, String, ImageLabel, String> autoBinding_1 = Bindings.createAutoBinding(UpdateStrategy.READ, tableMovieSets,
-        jTableBeanProperty_2, lblMovieSetPoster, imageLabelBeanProperty);
+    autoBinding_1 = Bindings.createAutoBinding(UpdateStrategy.READ, tableMovieSets, jTableBeanProperty_2, lblMovieSetPoster, imageLabelBeanProperty);
     autoBinding_1.bind();
   }
 

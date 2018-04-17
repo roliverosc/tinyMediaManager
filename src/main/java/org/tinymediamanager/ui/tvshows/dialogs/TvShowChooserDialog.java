@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,6 +128,11 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
   private JProgressBar                progressBar;
   private JButton                     okButton;
   private JLabel                      lblPath;
+
+  private JTableBinding<TvShowChooserModel, List<TvShowChooserModel>, JTable> jTableBinding;
+  private AutoBinding<JTable, String, JTextPane, String>                      autoBinding_1;
+  private AutoBinding<JTable, String, ImageLabel, String>                     autoBinding_2;
+  private AutoBinding<JTable, String, JTextArea, String>                      autoBinding_3;
 
   /**
    * Instantiates a new tv show chooser dialog.
@@ -520,7 +525,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
       startProgressBar(BUNDLE.getString("chooser.searchingfor") + " " + searchTerm); //$NON-NLS-1$
       List<MediaSearchResult> searchResult = tvShowList.searchTvShow(searchTerm, show, mediaScraper, language);
       tvShowsFound.clear();
-      if (searchResult.size() == 0) {
+      if (searchResult.isEmpty()) {
         // display empty result
         tvShowsFound.add(TvShowChooserModel.emptyResult);
       }
@@ -534,7 +539,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
         }
       }
 
-      if (tvShowsFound.size() == 1) { // only one result
+      if (!tvShowsFound.isEmpty()) {
         table.setRowSelectionInterval(0, 0); // select first row
       }
 
@@ -550,7 +555,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
   private class ScrapeTask extends SwingWorker<Void, Void> {
     private TvShowChooserModel model;
 
-    public ScrapeTask(TvShowChooserModel model) {
+    private ScrapeTask(TvShowChooserModel model) {
       this.model = model;
     }
 
@@ -576,7 +581,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
    * Inits the data bindings.
    */
   protected void initDataBindings() {
-    JTableBinding<TvShowChooserModel, List<TvShowChooserModel>, JTable> jTableBinding = SwingBindings.createJTableBinding(UpdateStrategy.READ,
+    jTableBinding = SwingBindings.createJTableBinding(UpdateStrategy.READ,
         tvShowsFound, table);
     //
     BeanProperty<TvShowChooserModel, String> tvShowChooserModelBeanProperty = BeanProperty.create("combinedName");
@@ -586,21 +591,39 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
     //
     BeanProperty<JTable, String> jTableBeanProperty_1 = BeanProperty.create("selectedElement.overview");
     BeanProperty<JTextPane, String> jTextPaneBeanProperty = BeanProperty.create("text");
-    AutoBinding<JTable, String, JTextPane, String> autoBinding_1 = Bindings.createAutoBinding(UpdateStrategy.READ, table, jTableBeanProperty_1,
+    autoBinding_1 = Bindings.createAutoBinding(UpdateStrategy.READ, table, jTableBeanProperty_1,
         tpTvShowOverview, jTextPaneBeanProperty);
     autoBinding_1.bind();
     //
     BeanProperty<JTable, String> jTableBeanProperty_2 = BeanProperty.create("selectedElement.posterUrl");
     BeanProperty<ImageLabel, String> imageLabelBeanProperty = BeanProperty.create("imageUrl");
-    AutoBinding<JTable, String, ImageLabel, String> autoBinding_2 = Bindings.createAutoBinding(UpdateStrategy.READ, table, jTableBeanProperty_2,
+    autoBinding_2 = Bindings.createAutoBinding(UpdateStrategy.READ, table, jTableBeanProperty_2,
         lblTvShowPoster, imageLabelBeanProperty);
     autoBinding_2.bind();
     //
     BeanProperty<JTable, String> jTableBeanProperty_3 = BeanProperty.create("selectedElement.combinedName");
     BeanProperty<JTextArea, String> jTextAreaBeanProperty_1 = BeanProperty.create("text");
-    AutoBinding<JTable, String, JTextArea, String> autoBinding_3 = Bindings.createAutoBinding(UpdateStrategy.READ, table, jTableBeanProperty_3,
+    autoBinding_3 = Bindings.createAutoBinding(UpdateStrategy.READ, table, jTableBeanProperty_3,
         lblTvShowName, jTextAreaBeanProperty_1);
     autoBinding_3.bind();
+  }
+
+  @Override
+  public void dispose() {
+    super.dispose();
+
+    if (jTableBinding.isBound()) {
+      jTableBinding.unbind();
+    }
+    if (autoBinding_1.isBound()) {
+      autoBinding_1.unbind();
+    }
+    if (autoBinding_2.isBound()) {
+      autoBinding_2.unbind();
+    }
+    if (autoBinding_3.isBound()) {
+      autoBinding_3.unbind();
+    }
   }
 
   /**
@@ -616,7 +639,7 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
   private class ChangeScraperAction extends AbstractAction {
     private static final long serialVersionUID = -3537728352474538431L;
 
-    public ChangeScraperAction() {
+    private ChangeScraperAction() {
     }
 
     @Override

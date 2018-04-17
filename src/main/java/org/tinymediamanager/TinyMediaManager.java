@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -158,7 +158,7 @@ public class TinyMediaManager {
     }
 
     LOGGER.info("=====================================================");
-    LOGGER.info("=== tinyMediaManager (c) 2012-2016 Manuel Laggner ===");
+    LOGGER.info("=== tinyMediaManager (c) 2012-2018 Manuel Laggner ===");
     LOGGER.info("=====================================================");
     LOGGER.info("tmm.version      : " + ReleaseInfo.getRealVersion());
 
@@ -347,10 +347,6 @@ public class TinyMediaManager {
               splash.update();
             }
 
-            // write a random number to file, to identify this instance (for
-            // updater, tracking, whatsoever)
-            Utils.trackEvent("startup");
-
             TmmWindowSaver.getInstance().loadSettings(window);
             window.setVisible(true);
 
@@ -365,7 +361,6 @@ public class TinyMediaManager {
             // show changelog
             if (newVersion && !ReleaseInfo.getVersion().equals(oldVersion)) {
               // special case nightly/git: if same snapshot version, do not display changelog
-              Utils.trackEvent("updated");
               showChangelog();
             }
           }

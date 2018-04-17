@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -456,9 +456,15 @@ public class MediaFileEditorPanel extends JPanel {
   }
 
   public void unbindBindings() {
-    jTableBinding.unbind();
-    jTableBinding_1.unbind();
-    jTableBinding_2.unbind();
+    if (jTableBinding.isBound()) {
+      jTableBinding.unbind();
+    }
+    if (jTableBinding_1.isBound()) {
+      jTableBinding_1.unbind();
+    }
+    if (jTableBinding_2.isBound()) {
+      jTableBinding_2.unbind();
+    }
   }
 
   protected void initDataBindings() {

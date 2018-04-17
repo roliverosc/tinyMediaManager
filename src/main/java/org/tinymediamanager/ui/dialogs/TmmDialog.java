@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 - 2017 Manuel Laggner
+ * Copyright 2012 - 2018 Manuel Laggner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public abstract class TmmDialog extends JDialog {
   private static final long serialVersionUID = 1L;
 
   public TmmDialog(String title, String id) {
-    super();
+    super(MainWindow.getActiveInstance());
     setTitle(title);
     setName(id);
     setIconImages(MainWindow.LOGOS);
