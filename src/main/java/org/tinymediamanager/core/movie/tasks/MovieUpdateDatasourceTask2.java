@@ -495,14 +495,12 @@ public class MovieUpdateDatasourceTask2 extends TmmThreadPool {
 
         // take first nfo 1:1
         if (movie == null) {
-          movie = nfo;
+          movie = new Movie();
         }
-        else {
-          movie.merge(nfo);
-        }
+        movie.merge(nfo);
 
         // was NFO, but parsing exception. try to find at least imdb id within
-        if (movie != null && movie.getImdbId().isEmpty()) {
+        if (movie.getImdbId().isEmpty()) {
           try {
             String imdb = Utils.readFileToString(mf.getFileAsPath());
             imdb = ParserUtils.detectImdbId(imdb);

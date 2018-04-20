@@ -7,6 +7,7 @@ x fixed occasional errors on closing
 x fixed downloading extrafanart/extrathumbs after network failures
 x fixed auto select the first search result in the search windows
 x fixed sorting of movies in movie sets
+x fixed IMDB parsing from movie NFOs
 
 Version 2.9.8
 =======================
