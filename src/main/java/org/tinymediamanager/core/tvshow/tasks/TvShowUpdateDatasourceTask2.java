@@ -675,7 +675,7 @@ public class TvShowUpdateDatasourceTask2 extends TmmThreadPool {
               if (result.name.isEmpty()) {
                 result.name = FilenameUtils.getBaseName(mf.getFilename());
               }
-              episode.setTitle(result.name);
+              episode.setTitle(TvShowEpisodeAndSeasonParser.cleanEpisodeTitle(result.name, tvShow.getTitle()));
               episode.setPath(mf.getPath());
               episode.setTvShow(tvShow);
               episode.addToMediaFiles(epFiles); // all found EP MFs

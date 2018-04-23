@@ -15,6 +15,7 @@
  */
 package org.tinymediamanager.core.movie.tasks;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -143,6 +144,13 @@ public class MovieExtraImageFetcher implements Runnable {
       tempFile = movie.getPathNIO().resolve(filename + ".part");
       outputStream = new FileOutputStream(tempFile.toFile());
       is = url1.getInputStream();
+
+      if (is == null) {
+        // 404 et all
+        IOUtils.closeQuietly(outputStream);
+        throw new FileNotFoundException("Error accessing url: " + url1.getStatusLine());
+      }
+
       IOUtils.copy(is, outputStream);
       outputStream.flush();
       try {
@@ -236,8 +244,15 @@ public class MovieExtraImageFetcher implements Runnable {
         String providedFiletype = FilenameUtils.getExtension(urlAsString);
         Url url = new Url(urlAsString);
         Path file = folder.resolve("fanart" + i + "." + providedFiletype);
+        LOGGER.debug("writing extrafanart " + file.getFileName());
+
         outputStream = new FileOutputStream(file.toFile());
         is = url.getInputStream();
+        if (is == null) {
+          // 404 et all
+          throw new FileNotFoundException("Error accessing url: " + url.getStatusLine());
+        }
+
         IOUtils.copy(is, outputStream);
         outputStream.flush();
         try {
@@ -307,6 +322,8 @@ public class MovieExtraImageFetcher implements Runnable {
         Path file;
         if (MovieModuleManager.MOVIE_SETTINGS.isImageExtraThumbsResize() && MovieModuleManager.MOVIE_SETTINGS.getImageExtraThumbsSize() > 0) {
           file = folder.resolve("thumb" + i + ".jpg");
+          LOGGER.debug("writing extrathumb " + file.getFileName());
+
           outputStream = new FileOutputStream(file.toFile());
           try {
             is = ImageCache.scaleImage(url, MovieModuleManager.MOVIE_SETTINGS.getImageExtraThumbsSize());
@@ -317,10 +334,17 @@ public class MovieExtraImageFetcher implements Runnable {
           }
         }
         else {
-          file = folder.resolve("thumb" + (i + 1) + "." + providedFiletype);
+          file = folder.resolve("thumb" + i + "." + providedFiletype);
+          LOGGER.debug("writing extrathumb " + file.getFileName());
+
           outputStream = new FileOutputStream(file.toFile());
           Url url1 = new Url(url);
           is = url1.getInputStream();
+
+          if (is == null) {
+            // 404 et all
+            throw new FileNotFoundException("Error accessing url: " + url1.getStatusLine());
+          }
         }
 
         IOUtils.copy(is, outputStream);
