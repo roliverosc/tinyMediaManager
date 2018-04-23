@@ -9,6 +9,7 @@ x improved downloading of artwork from movie/TV show editors
 x fixed auto select the first search result in the search windows
 x fixed sorting of movies in movie sets
 x fixed IMDB parsing from movie NFOs
+x improved IMDB scraping original titles
 
 Version 2.9.8
 =======================
