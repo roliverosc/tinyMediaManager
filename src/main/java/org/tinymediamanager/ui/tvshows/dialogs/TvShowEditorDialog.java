@@ -812,38 +812,45 @@ public class TvShowEditorDialog extends TmmDialog {
         tvShowToEdit.setCertification((Certification) certification);
       }
 
-      if (!StringUtils.isEmpty(lblPoster.getImageUrl()) && !lblPoster.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.POSTER))) {
+      if ((!StringUtils.isEmpty(lblPoster.getImageUrl()) && !lblPoster.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.POSTER)))
+          || tvShowToEdit.getArtworkFilename(MediaFileType.POSTER).isEmpty()) {
         tvShowToEdit.setArtworkUrl(lblPoster.getImageUrl(), MediaFileType.POSTER);
         tvShowToEdit.downloadArtwork(MediaFileType.POSTER);
       }
 
-      if (!StringUtils.isEmpty(lblFanart.getImageUrl()) && !lblFanart.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.FANART))) {
+      if ((!StringUtils.isEmpty(lblFanart.getImageUrl()) && !lblFanart.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.FANART)))
+          || tvShowToEdit.getArtworkFilename(MediaFileType.FANART).isEmpty()) {
         tvShowToEdit.setArtworkUrl(lblFanart.getImageUrl(), MediaFileType.FANART);
         tvShowToEdit.downloadArtwork(MediaFileType.FANART);
       }
 
-      if (!StringUtils.isEmpty(lblBanner.getImageUrl()) && !lblBanner.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.BANNER))) {
+      if ((!StringUtils.isEmpty(lblBanner.getImageUrl()) && !lblBanner.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.BANNER)))
+          || tvShowToEdit.getArtworkFilename(MediaFileType.BANNER).isEmpty()) {
         tvShowToEdit.setArtworkUrl(lblBanner.getImageUrl(), MediaFileType.BANNER);
         tvShowToEdit.downloadArtwork(MediaFileType.BANNER);
       }
 
-      if (!StringUtils.isEmpty(lblLogo.getImageUrl()) && !lblLogo.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.LOGO))) {
+      if ((!StringUtils.isEmpty(lblLogo.getImageUrl()) && !lblLogo.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.LOGO)))
+          || tvShowToEdit.getArtworkFilename(MediaFileType.LOGO).isEmpty()) {
         tvShowToEdit.setArtworkUrl(lblLogo.getImageUrl(), MediaFileType.LOGO);
         tvShowToEdit.downloadArtwork(MediaFileType.LOGO);
       }
 
-      if (!StringUtils.isEmpty(lblClearlogo.getImageUrl())
-          && !lblClearlogo.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.CLEARLOGO))) {
+      if ((!StringUtils.isEmpty(lblClearlogo.getImageUrl())
+          && !lblClearlogo.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.CLEARLOGO)))
+          || tvShowToEdit.getArtworkFilename(MediaFileType.CLEARLOGO).isEmpty()) {
         tvShowToEdit.setArtworkUrl(lblClearlogo.getImageUrl(), MediaFileType.CLEARLOGO);
         tvShowToEdit.downloadArtwork(MediaFileType.CLEARLOGO);
       }
 
-      if (!StringUtils.isEmpty(lblClearart.getImageUrl()) && !lblClearart.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.CLEARART))) {
+      if ((!StringUtils.isEmpty(lblClearart.getImageUrl()) && !lblClearart.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.CLEARART)))
+          || tvShowToEdit.getArtworkFilename(MediaFileType.CLEARART).isEmpty()) {
         tvShowToEdit.setArtworkUrl(lblClearart.getImageUrl(), MediaFileType.CLEARART);
         tvShowToEdit.downloadArtwork(MediaFileType.CLEARART);
       }
 
-      if (!StringUtils.isEmpty(lblThumb.getImageUrl()) && !lblThumb.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.THUMB))) {
+      if ((!StringUtils.isEmpty(lblThumb.getImageUrl()) && !lblThumb.getImageUrl().equals(tvShowToEdit.getArtworkUrl(MediaFileType.THUMB)))
+          || tvShowToEdit.getArtworkFilename(MediaFileType.THUMB).isEmpty()) {
         tvShowToEdit.setArtworkUrl(lblThumb.getImageUrl(), MediaFileType.THUMB);
         tvShowToEdit.downloadArtwork(MediaFileType.THUMB);
       }
