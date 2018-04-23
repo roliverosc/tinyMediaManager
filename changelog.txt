@@ -1,6 +1,7 @@
 Version 2.9.9
 =======================
 + removed usage of Google Analytics
++ added hebrew as media language (thx to @israelio)
 x several fixes in the OSX starter script
 x fixed opening of dialogs without parents
 x fixed occasional errors on closing
