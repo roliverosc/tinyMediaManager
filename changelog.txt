@@ -1,3 +1,8 @@
+upcoming Version 
+=======================
++ feature: Kodi plugins now able to download images (movies)
+
+
 Version 2.9.9
 =======================
 + removed usage of Google Analytics

@@ -244,6 +244,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
         panelSearchField.add(btnSearch, "8, 1, fill, default");
         btnSearch.setIcon(IconManager.SEARCH);
         btnSearch.addActionListener(new ActionListener() {
+
           public void actionPerformed(ActionEvent arg0) {
             searchMovie(textFieldSearchString.getText(), null);
           }
@@ -284,6 +285,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
             table.setBorder(new LineBorder(new Color(0, 0, 0)));
             ListSelectionModel rowSM = table.getSelectionModel();
             rowSM.addListSelectionListener(new ListSelectionListener() {
+
               public void valueChanged(ListSelectionEvent e) {
                 // Ignore extra messages.
                 if (e.getValueIsAdjusting())
@@ -310,6 +312,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
         }
       }
       {
+
         JPanel panelSearchDetail = new JPanel();
         splitPane.setRightComponent(panelSearchDetail);
         panelSearchDetail.setLayout(new FormLayout(
@@ -425,6 +428,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
       int row = table.getSelectedRow();
       if (row >= 0) {
         MovieChooserModel model = moviesFound.get(row);
+
         if (model != MovieChooserModel.emptyResult) {
           // when scraping was not successful, abort saving
           if (!model.isScraped()) {
@@ -433,6 +437,15 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
           }
 
           MediaMetadata md = model.getMetadata();
+
+          boolean isKodiScraper = model.getMetadataProvider().getName().startsWith("Kodi");
+          if (isKodiScraper) {
+            // FIXME: getFanart() gets basically complete artworks list... rename?
+            if (md.getFanart().size() > 0) {
+              // inject now our Kodi scraper silently as ImageScraper
+              artworkScrapers.add(model.getMetadataProvider());
+            }
+          }
 
           // did the user want to choose the images?
           if (!MovieModuleManager.MOVIE_SETTINGS.isScrapeBestImage()) {
@@ -452,7 +465,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
               {
                 ImageLabel lblImage = new ImageLabel();
                 ImageChooserDialog dialog = new ImageChooserDialog(movieToScrape.getIds(), ImageType.POSTER, artworkScrapers, lblImage, null, null,
-                    MediaType.MOVIE);
+                    MediaType.MOVIE, model.getResult());
                 dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
                 dialog.setVisible(true);
                 movieToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.POSTER);
@@ -465,7 +478,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
                 List<String> extrathumbs = new ArrayList<>();
                 List<String> extrafanarts = new ArrayList<>();
                 ImageChooserDialog dialog = new ImageChooserDialog(movieToScrape.getIds(), ImageType.FANART, artworkScrapers, lblImage, extrathumbs,
-                    extrafanarts, MediaType.MOVIE);
+                    extrafanarts, MediaType.MOVIE, model.getResult());
                 dialog.setVisible(true);
                 movieToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.FANART);
                 movieToScrape.downloadArtwork(MediaFileType.FANART);
@@ -486,7 +499,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
               if (MovieModuleManager.MOVIE_SETTINGS.isImageBanner()) {
                 ImageLabel lblImage = new ImageLabel();
                 ImageChooserDialog dialog = new ImageChooserDialog(movieToScrape.getIds(), ImageType.BANNER, artworkScrapers, lblImage, null, null,
-                    MediaType.MOVIE);
+                    MediaType.MOVIE, model.getResult());
                 dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
                 dialog.setVisible(true);
                 movieToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.BANNER);
@@ -497,7 +510,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
               if (MovieModuleManager.MOVIE_SETTINGS.isImageLogo()) {
                 ImageLabel lblImage = new ImageLabel();
                 ImageChooserDialog dialog = new ImageChooserDialog(movieToScrape.getIds(), ImageType.LOGO, artworkScrapers, lblImage, null, null,
-                    MediaType.MOVIE);
+                    MediaType.MOVIE, model.getResult());
                 dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
                 dialog.setVisible(true);
                 movieToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.LOGO);
@@ -508,7 +521,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
               if (MovieModuleManager.MOVIE_SETTINGS.isImageLogo()) {
                 ImageLabel lblImage = new ImageLabel();
                 ImageChooserDialog dialog = new ImageChooserDialog(movieToScrape.getIds(), ImageType.CLEARLOGO, artworkScrapers, lblImage, null, null,
-                    MediaType.MOVIE);
+                    MediaType.MOVIE, model.getResult());
                 dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
                 dialog.setVisible(true);
                 movieToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.CLEARLOGO);
@@ -519,7 +532,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
               if (MovieModuleManager.MOVIE_SETTINGS.isImageClearart()) {
                 ImageLabel lblImage = new ImageLabel();
                 ImageChooserDialog dialog = new ImageChooserDialog(movieToScrape.getIds(), ImageType.CLEARART, artworkScrapers, lblImage, null, null,
-                    MediaType.MOVIE);
+                    MediaType.MOVIE, model.getResult());
                 dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
                 dialog.setVisible(true);
                 movieToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.CLEARART);
@@ -530,7 +543,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
               if (MovieModuleManager.MOVIE_SETTINGS.isImageDiscart()) {
                 ImageLabel lblImage = new ImageLabel();
                 ImageChooserDialog dialog = new ImageChooserDialog(movieToScrape.getIds(), ImageType.DISC, artworkScrapers, lblImage, null, null,
-                    MediaType.MOVIE);
+                    MediaType.MOVIE, model.getResult());
                 dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
                 dialog.setVisible(true);
                 movieToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.DISCART);
@@ -541,7 +554,7 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
               if (MovieModuleManager.MOVIE_SETTINGS.isImageThumb()) {
                 ImageLabel lblImage = new ImageLabel();
                 ImageChooserDialog dialog = new ImageChooserDialog(movieToScrape.getIds(), ImageType.THUMB, artworkScrapers, lblImage, null, null,
-                    MediaType.MOVIE);
+                    MediaType.MOVIE, model.getResult());
                 dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
                 dialog.setVisible(true);
                 movieToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.THUMB);
@@ -574,12 +587,14 @@ public class MovieChooserDialog extends TmmDialog implements ActionListener {
 
     // cancel
     if ("Cancel".equals(e.getActionCommand())) {
+
       setVisible(false);
     }
 
     // Abort queue
     if ("Abort".equals(e.getActionCommand())) {
       continueQueue = false;
+
       setVisible(false);
     }
 
