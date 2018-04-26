@@ -21,10 +21,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tinymediamanager.Globals;
 import org.tinymediamanager.core.License;
+import org.tinymediamanager.core.Utils;
 import org.tinymediamanager.ui.EqualsLayout;
 import org.tinymediamanager.ui.UTF8Control;
 
@@ -140,7 +144,12 @@ public class RegisterDonatorVersionDialog extends TmmDialog {
               p.setProperty("user", tfName.getText());
               p.setProperty("email", tfEmailAddress.getText());
               p.setProperty("generated", String.valueOf(new Date().getTime()));
-              p.setProperty("uuid", FileUtils.readFileToString(new File("tmm.uuid")));
+
+              Path uuidFile = Paths.get("tmm.uuid");
+              if (!Files.exists(uuidFile)) {
+                Utils.writeStringToFile(uuidFile, UUID.randomUUID().toString());
+              }
+              p.setProperty("uuid", FileUtils.readFileToString(uuidFile.toFile()));
 
               // get encrypted string and write tmm.lic
               if (License.encrypt(p) && License.isValid()) {

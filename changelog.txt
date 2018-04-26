@@ -1,7 +1,7 @@
 upcoming Version 
 =======================
 + feature: Kodi plugins now able to download images (movies)
-
+x fixed registering donator version
 
 Version 2.9.9
 =======================
