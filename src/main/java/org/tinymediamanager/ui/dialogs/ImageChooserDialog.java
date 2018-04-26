@@ -67,6 +67,7 @@ import org.tinymediamanager.core.movie.MovieModuleManager;
 import org.tinymediamanager.core.tvshow.TvShowModuleManager;
 import org.tinymediamanager.scraper.MediaScrapeOptions;
 import org.tinymediamanager.scraper.MediaScraper;
+import org.tinymediamanager.scraper.MediaSearchResult;
 import org.tinymediamanager.scraper.entities.MediaArtwork;
 import org.tinymediamanager.scraper.entities.MediaArtwork.ImageSizeAndUrl;
 import org.tinymediamanager.scraper.entities.MediaArtwork.MediaArtworkType;
@@ -156,6 +157,31 @@ public class ImageChooserDialog extends TmmDialog {
    */
   public ImageChooserDialog(final HashMap<String, Object> ids, ImageType type, List<MediaScraper> artworkScrapers, ImageLabel imageLabel,
       List<String> extraThumbs, List<String> extraFanarts, MediaType mediaType) {
+    this(ids, type, artworkScrapers, imageLabel, extraThumbs, extraFanarts, mediaType, null);
+  }
+
+  /**
+   * Instantiates a new image chooser dialog.
+   * 
+   * @param ids
+   *          the ids
+   * @param type
+   *          the type
+   * @param artworkScrapers
+   *          the artwork providers
+   * @param imageLabel
+   *          the image label
+   * @param extraThumbs
+   *          the extra thumbs
+   * @param extraFanarts
+   *          the extra fanarts
+   * @param mediaType
+   *          the media for for which artwork has to be chosen
+   * @param msr
+   *          the mediaSearchResult from former search (for scrapers to interpret - or not)
+   */
+  public ImageChooserDialog(final HashMap<String, Object> ids, ImageType type, List<MediaScraper> artworkScrapers, ImageLabel imageLabel,
+      List<String> extraThumbs, List<String> extraFanarts, MediaType mediaType, MediaSearchResult msr) {
     super("", DIALOG_ID);
     this.imageLabel = imageLabel;
     this.type = type;
@@ -379,7 +405,7 @@ public class ImageChooserDialog extends TmmDialog {
 
     }
 
-    task = new DownloadTask(ids, this.artworkScrapers);
+    task = new DownloadTask(ids, this.artworkScrapers, msr);
     task.execute();
   }
 
@@ -748,20 +774,18 @@ public class ImageChooserDialog extends TmmDialog {
   private class DownloadTask extends SwingWorker<Void, DownloadChunk> {
     private HashMap<String, Object> ids;
     private List<MediaScraper>      artworkScrapers;
+    private MediaSearchResult       msr         = null;
     private boolean                 imagesFound = false;
 
-    public DownloadTask(HashMap<String, Object> ids, List<MediaScraper> artworkScrapers) {
+    // MediaScrapeOptions is merged from previous serach, to transpond some urls to artwork scrapers
+    public DownloadTask(HashMap<String, Object> ids, List<MediaScraper> artworkScrapers, MediaSearchResult msr) {
       this.ids = ids;
       this.artworkScrapers = artworkScrapers;
+      this.msr = msr;
     }
 
     @Override
     public Void doInBackground() {
-      if (ids.isEmpty()) {
-        JOptionPane.showMessageDialog(null, BUNDLE.getString("image.download.noid")); //$NON-NLS-1$
-        return null;
-      }
-
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
@@ -773,11 +797,23 @@ public class ImageChooserDialog extends TmmDialog {
         return null;
       }
 
+      boolean scraped = false;
+
       // get images from all artworkproviders
       for (MediaScraper scraper : artworkScrapers) {
         try {
+          // FIXME: since we now have the search result, we might implement some better logic...
+          if (!scraper.getName().startsWith("Kodi") && ids.isEmpty()) {
+            continue;
+          }
+          scraped = true;
+
           IMediaArtworkProvider artworkProvider = (IMediaArtworkProvider) scraper.getMediaProvider();
           MediaScrapeOptions options = new MediaScrapeOptions(mediaType);
+          // set previous search result, to have something in artwork scrapers
+          if (msr != null) {
+            options.setResult(msr);
+          }
           if (mediaType == MediaType.MOVIE || mediaType == MediaType.MOVIE_SET) {
             options.setLanguage(LocaleUtils.toLocale(MovieModuleManager.MOVIE_SETTINGS.getScraperLanguage().name()));
             options.setCountry(MovieModuleManager.MOVIE_SETTINGS.getCertificationCountry());
@@ -791,6 +827,7 @@ public class ImageChooserDialog extends TmmDialog {
           else {
             continue;
           }
+
           switch (type) {
             case POSTER:
               options.setArtworkType(MediaArtworkType.POSTER);
@@ -875,6 +912,10 @@ public class ImageChooserDialog extends TmmDialog {
         }
       } // end foreach scraper
 
+      // we did not even scrape with Kodi - display default information of missing IDs...
+      if (!scraped && ids.isEmpty()) {
+        JOptionPane.showMessageDialog(null, BUNDLE.getString("image.download.noid")); //$NON-NLS-1$
+      }
       return null;
     }
 

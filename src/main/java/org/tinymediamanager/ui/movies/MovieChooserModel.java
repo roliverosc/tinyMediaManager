@@ -104,6 +104,10 @@ public class MovieChooserModel extends AbstractModelObject {
     combinedName = name;
   }
 
+  public MediaScraper getMetadataProvider() {
+    return metadataProvider;
+  }
+
   public void setName(String name) {
     String oldValue = this.name;
     this.name = name;
@@ -195,6 +199,10 @@ public class MovieChooserModel extends AbstractModelObject {
 
   public MediaMetadata getMetadata() {
     return metadata;
+  }
+
+  public MediaSearchResult getResult() {
+    return result;
   }
 
   public boolean isScraped() {

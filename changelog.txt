@@ -1,3 +1,8 @@
+Version 2.9.10
+=======================
++ feature: Kodi plugins now able to download images (movies)
+x fixed registering donator version
+
 Version 2.9.9
 =======================
 + removed usage of Google Analytics
