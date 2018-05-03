@@ -1,3 +1,8 @@
+Upcoming version
+=======================
+x added Ł and ł in the ascii replacer
+x changed tvdb API to version 2
+
 Version 2.9.10
 =======================
 + feature: Kodi plugins now able to download images (movies)
