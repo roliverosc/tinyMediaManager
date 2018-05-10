@@ -1,3 +1,7 @@
+Upcoming version
+=======================
+x fixed imdb scraper: parsing of numbers in RU
+
 Version 2.9.11
 =======================
 x added Ł and ł in the ascii replacer
