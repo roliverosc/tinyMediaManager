@@ -1,6 +1,7 @@
 Upcoming version
 =======================
 x fixed imdb scraper: parsing of numbers in RU
+x fixed loading of the TVDB plugin
 
 Version 2.9.11
 =======================
