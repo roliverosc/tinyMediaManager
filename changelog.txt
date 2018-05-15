@@ -1,5 +1,6 @@
 Upcoming version
 =======================
+x display Kodi scrapers at the end of the list
 x fixed imdb scraper: parsing of numbers in RU
 x fixed loading of the TVDB plugin
 

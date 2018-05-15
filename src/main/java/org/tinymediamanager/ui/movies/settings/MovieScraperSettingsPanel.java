@@ -22,6 +22,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -126,16 +127,22 @@ public class MovieScraperSettingsPanel extends ScrollablePanel {
     // data init
     MediaScraper defaultMediaScraper = MovieList.getInstance().getDefaultMediaScraper();
     int selectedIndex = 0;
-    int counter = 0;
     for (MediaScraper scraper : MovieList.getInstance().getAvailableMediaScrapers()) {
       MovieScraper movieScraper = new MovieScraper(scraper);
-      if (scraper.equals(defaultMediaScraper)) {
-        movieScraper.defaultScraper = true;
-        selectedIndex = counter;
-      }
       scrapers.add(movieScraper);
-      counter++;
     }
+
+    Collections.sort(scrapers);
+
+    for (int i = 0; i < scrapers.size(); i++) {
+      MovieScraper scraper = scrapers.get(i);
+      if (scraper.getMediaScraper().equals(defaultMediaScraper)) {
+        scraper.defaultScraper = true;
+        selectedIndex = i;
+        break;
+      }
+    }
+
     // UI init
     setLayout(new FormLayout(
         new ColumnSpec[] { FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"),
@@ -326,7 +333,7 @@ public class MovieScraperSettingsPanel extends ScrollablePanel {
     });
 
     // select default movie scraper
-    if (counter > 0) {
+    if (!scrapers.isEmpty()) {
       tableScraper.getSelectionModel().setSelectionInterval(selectedIndex, selectedIndex);
     }
   }
@@ -334,7 +341,7 @@ public class MovieScraperSettingsPanel extends ScrollablePanel {
   /*****************************************************************************************************
    * helper classes
    ****************************************************************************************************/
-  public static class MovieScraper extends AbstractModelObject {
+  public static class MovieScraper extends AbstractModelObject implements Comparable<MovieScraper> {
     private MediaScraper scraper;
     private Icon         scraperLogo;
     private boolean      defaultScraper;
@@ -410,8 +417,28 @@ public class MovieScraperSettingsPanel extends ScrollablePanel {
       }
     }
 
+    public boolean isKodiScraper() {
+      return scraper.getName().startsWith("Kodi");
+    }
+
     public IMediaProvider getMediaProvider() {
       return scraper.getMediaProvider();
+    }
+
+    public MediaScraper getMediaScraper() {
+      return scraper;
+    }
+
+    @Override
+    public int compareTo(MovieScraper o) {
+      if (isKodiScraper() && !o.isKodiScraper()) {
+        return 1;
+      }
+      if (!isKodiScraper() && o.isKodiScraper()) {
+        return -1;
+      }
+
+      return scraper.getName().compareTo(o.scraper.getName());
     }
   }
 
