@@ -3,6 +3,7 @@ Upcoming version
 x display Kodi scrapers at the end of the list
 x fixed imdb scraper: parsing of numbers in RU
 x fixed loading of the TVDB plugin
+x fixed movie renamer $1/$2 tokens (adhere ASCII replacement if set)
 
 Version 2.9.11
 =======================
