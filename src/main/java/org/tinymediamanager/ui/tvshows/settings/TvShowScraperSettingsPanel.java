@@ -26,6 +26,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -134,16 +135,22 @@ public class TvShowScraperSettingsPanel extends ScrollablePanel {
     // data init
     MediaScraper defaultMediaScraper = TvShowList.getInstance().getDefaultMediaScraper();
     int selectedIndex = 0;
-    int counter = 0;
     for (MediaScraper scraper : TvShowList.getInstance().getAvailableMediaScrapers()) {
       TvShowScraper tvShowScraper = new TvShowScraper(scraper);
-      if (scraper.equals(defaultMediaScraper)) {
-        tvShowScraper.defaultScraper = true;
-        selectedIndex = counter;
-      }
       scrapers.add(tvShowScraper);
-      counter++;
     }
+
+    Collections.sort(scrapers);
+
+    for (int i = 0; i < scrapers.size(); i++) {
+      TvShowScraper scraper = scrapers.get(i);
+      if (scraper.getMediaScraper().equals(defaultMediaScraper)) {
+        scraper.defaultScraper = true;
+        selectedIndex = i;
+        break;
+      }
+    }
+
     List<String> enabledArtworkProviders = settings.getTvShowArtworkScrapers();
     int artworkSelectedIndex = -1;
     int counterAW = 0;
@@ -390,7 +397,7 @@ public class TvShowScraperSettingsPanel extends ScrollablePanel {
       });
 
       // select default TV show scraper
-      if (counter > 0) {
+      if (!scrapers.isEmpty()) {
         tableScraper.getSelectionModel().setSelectionInterval(selectedIndex, selectedIndex);
       }
 
@@ -447,7 +454,7 @@ public class TvShowScraperSettingsPanel extends ScrollablePanel {
   /*****************************************************************************************************
    * helper classes
    ****************************************************************************************************/
-  public static class TvShowScraper extends AbstractModelObject {
+  public static class TvShowScraper extends AbstractModelObject implements Comparable<TvShowScraper> {
     private MediaScraper scraper;
     private Icon         scraperLogo;
     private boolean      defaultScraper;
@@ -484,6 +491,10 @@ public class TvShowScraperSettingsPanel extends ScrollablePanel {
 
     public String getScraperId() {
       return scraper.getId();
+    }
+
+    public MediaScraper getMediaScraper() {
+      return scraper;
     }
 
     public String getScraperName() {
@@ -523,8 +534,24 @@ public class TvShowScraperSettingsPanel extends ScrollablePanel {
       }
     }
 
+    public boolean isKodiScraper() {
+      return scraper.getName().startsWith("Kodi");
+    }
+
     public IMediaProvider getMediaProvider() {
       return scraper.getMediaProvider();
+    }
+
+    @Override
+    public int compareTo(TvShowScraper o) {
+      if (isKodiScraper() && !o.isKodiScraper()) {
+        return 1;
+      }
+      if (!isKodiScraper() && o.isKodiScraper()) {
+        return -1;
+      }
+
+      return scraper.getName().compareTo(o.scraper.getName());
     }
   }
 

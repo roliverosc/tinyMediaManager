@@ -9,6 +9,7 @@ import org.tinymediamanager.BasicTest;
 import org.tinymediamanager.core.entities.MediaFile;
 import org.tinymediamanager.core.entities.MediaFileAudioStream;
 import org.tinymediamanager.core.movie.entities.Movie;
+import org.tinymediamanager.scraper.util.StrgUtils;
 
 public class MovieRenamerTest extends BasicTest {
   @Test
@@ -18,6 +19,43 @@ public class MovieRenamerTest extends BasicTest {
     assertEqual("2-22", MovieRenamer.replaceInvalidCharacters("2:22"));
     assertEqual("2 -22", MovieRenamer.replaceInvalidCharacters("2 :22"));
     assertEqual("weird - movie", MovieRenamer.replaceInvalidCharacters("weird \"\\\\:<>|/?* movie"));
+  }
+
+  @Test
+  public void firstCharacter() {
+    assertEqual("0-9", getFirst(".45"));
+    assertEqual("M", getFirst("Maria"));
+    assertEqual("A", getFirst("Æon Flux"));
+    assertEqual("0-9", getFirst("11:22"));
+    assertEqual("0-9", getFirst("...+!?45"));
+    assertEqual("#", getFirst("...+!?"));
+  }
+
+  private String getFirst(String name) {
+    String ret = "";
+    System.out.println("\nInput: " + name);
+
+    //
+    ret = StrgUtils.convertToAscii(name, false);
+    System.out.println("Normalized: " + ret);
+
+    // strip out all except alphanum
+    ret = ret.replaceAll("[^a-zA-Z0-9]", "");
+    System.out.println("Stripped: " + ret);
+
+    if (ret.isEmpty()) {
+      ret = "#";
+    }
+    // just take the first
+    ret = ret.substring(0, 1);
+
+    // starts with a number?
+    if (Character.isDigit(ret.charAt(0))) {
+      ret = "0-9"; // maybe "#" ?
+    }
+
+    System.out.println("ret: " + ret);
+    return ret;
   }
 
   @Test

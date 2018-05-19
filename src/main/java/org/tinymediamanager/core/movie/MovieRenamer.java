@@ -1036,10 +1036,22 @@ public class MovieRenamer {
         ret = movie.getTitle();
         break;
       case "$1":
-        ret = getFirstAlphaNum(movie.getTitle());
+        // if we have ASCII replacement set, use our better normalizer
+        if (MovieModuleManager.MOVIE_SETTINGS.isAsciiReplacement()) {
+          ret = getFirstAlphaNum(StrgUtils.convertToAscii(movie.getTitle(), false));
+        }
+        else {
+          ret = getFirstAlphaNum(movie.getTitle());
+        }
         break;
       case "$2":
-        ret = getFirstAlphaNum(movie.getTitleSortable());
+        // if we have ASCII replacement set, use our better normalizer
+        if (MovieModuleManager.MOVIE_SETTINGS.isAsciiReplacement()) {
+          ret = getFirstAlphaNum(StrgUtils.convertToAscii(movie.getTitleSortable(), false));
+        }
+        else {
+          ret = getFirstAlphaNum(movie.getTitleSortable());
+        }
         break;
       case "$Y":
         ret = movie.getYear().equals("0") ? "" : movie.getYear();
