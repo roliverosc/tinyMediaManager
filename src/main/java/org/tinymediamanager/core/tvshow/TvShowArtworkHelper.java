@@ -294,7 +294,7 @@ public class TvShowArtworkHelper {
 
     String filename = "";
     if (season > 0) {
-      filename = String.format(show.getPath() + File.separator + "season%02d-poster." + FilenameUtils.getExtension(seasonPosterUrl), season);
+      filename = show.getPath() + File.separator + String.format("season%02d-poster.", season) + FilenameUtils.getExtension(seasonPosterUrl);
     }
     else {
       filename = show.getPath() + File.separator + "season-specials-poster." + FilenameUtils.getExtension(seasonPosterUrl);
