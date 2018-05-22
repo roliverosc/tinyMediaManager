@@ -131,7 +131,7 @@ public class TvShowEpisodeScrapeTask extends TmmTask {
         LOGGER.info(options.toString());
         LOGGER.info("=====================================================");
         MediaMetadata metadata = ((ITvShowMetadataProvider) mediaScraper.getMediaProvider()).getMetadata(options);
-        if (StringUtils.isNotBlank(metadata.getTitle())) {
+        if (metadata != null && StringUtils.isNotBlank(metadata.getTitle())) {
           episode.setMetadata(metadata);
         }
       }
