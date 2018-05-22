@@ -46,6 +46,15 @@ public abstract class TmmDialog extends JDialog {
     setModalityType(ModalityType.APPLICATION_MODAL);
   }
 
+  public TmmDialog(JDialog owner, String title, String id) {
+    super(owner);
+    setTitle(title);
+    setName(id);
+    setIconImages(MainWindow.LOGOS);
+    setModal(true);
+    setModalityType(ModalityType.APPLICATION_MODAL);
+  }
+
   public TmmDialog(JFrame owner, String title, String id) {
     super(owner);
     setTitle(title);

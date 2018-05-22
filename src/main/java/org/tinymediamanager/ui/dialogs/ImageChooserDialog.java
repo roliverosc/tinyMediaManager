@@ -41,6 +41,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -139,7 +141,9 @@ public class ImageChooserDialog extends TmmDialog {
 
   /**
    * Instantiates a new image chooser dialog.
-   * 
+   *
+   * @param owner
+   *          the owner of this window
    * @param ids
    *          the ids
    * @param type
@@ -155,14 +159,48 @@ public class ImageChooserDialog extends TmmDialog {
    * @param mediaType
    *          the media for for which artwork has to be chosen
    */
-  public ImageChooserDialog(final HashMap<String, Object> ids, ImageType type, List<MediaScraper> artworkScrapers, ImageLabel imageLabel,
-      List<String> extraThumbs, List<String> extraFanarts, MediaType mediaType) {
-    this(ids, type, artworkScrapers, imageLabel, extraThumbs, extraFanarts, mediaType, null);
+  public ImageChooserDialog(JFrame owner, final HashMap<String, Object> ids, ImageType type, List<MediaScraper> artworkScrapers,
+      ImageLabel imageLabel, List<String> extraThumbs, List<String> extraFanarts, MediaType mediaType) {
+    super(owner, "", DIALOG_ID);
+    this.imageLabel = imageLabel;
+    this.type = type;
+    this.mediaType = mediaType;
+    this.artworkScrapers = artworkScrapers;
+    this.extraThumbs = extraThumbs;
+    this.extraFanarts = extraFanarts;
+    init(ids, null);
   }
 
   /**
    * Instantiates a new image chooser dialog.
    * 
+   * @param owner
+   *          the owner of this window
+   * @param ids
+   *          the ids
+   * @param type
+   *          the type
+   * @param artworkScrapers
+   *          the artwork providers
+   * @param imageLabel
+   *          the image label
+   * @param extraThumbs
+   *          the extra thumbs
+   * @param extraFanarts
+   *          the extra fanarts
+   * @param mediaType
+   *          the media for for which artwork has to be chosen
+   */
+  public ImageChooserDialog(JDialog owner, final HashMap<String, Object> ids, ImageType type, List<MediaScraper> artworkScrapers,
+      ImageLabel imageLabel, List<String> extraThumbs, List<String> extraFanarts, MediaType mediaType) {
+    this(owner, ids, type, artworkScrapers, imageLabel, extraThumbs, extraFanarts, mediaType, null);
+  }
+
+  /**
+   * Instantiates a new image chooser dialog.
+   * 
+   * @param owner
+   *          the owner of this window
    * @param ids
    *          the ids
    * @param type
@@ -180,15 +218,19 @@ public class ImageChooserDialog extends TmmDialog {
    * @param msr
    *          the mediaSearchResult from former search (for scrapers to interpret - or not)
    */
-  public ImageChooserDialog(final HashMap<String, Object> ids, ImageType type, List<MediaScraper> artworkScrapers, ImageLabel imageLabel,
-      List<String> extraThumbs, List<String> extraFanarts, MediaType mediaType, MediaSearchResult msr) {
-    super("", DIALOG_ID);
+  public ImageChooserDialog(JDialog owner, final HashMap<String, Object> ids, ImageType type, List<MediaScraper> artworkScrapers,
+      ImageLabel imageLabel, List<String> extraThumbs, List<String> extraFanarts, MediaType mediaType, MediaSearchResult msr) {
+    super(owner, "", DIALOG_ID);
     this.imageLabel = imageLabel;
     this.type = type;
     this.mediaType = mediaType;
     this.artworkScrapers = artworkScrapers;
     this.extraThumbs = extraThumbs;
     this.extraFanarts = extraFanarts;
+    init(ids, msr);
+  }
+
+  private void init(final HashMap<String, Object> ids, MediaSearchResult msr) {
 
     switch (type) {
       case FANART:

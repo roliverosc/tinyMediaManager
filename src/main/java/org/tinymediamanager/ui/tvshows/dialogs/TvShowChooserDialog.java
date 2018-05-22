@@ -410,7 +410,8 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
               // poster
               {
                 ImageLabel lblImage = new ImageLabel();
-                ImageChooserDialog dialog = new ImageChooserDialog(tvShowToScrape.getIds(), ImageType.POSTER, artworkScrapers, lblImage, null, null,
+                ImageChooserDialog dialog = new ImageChooserDialog(this, tvShowToScrape.getIds(), ImageType.POSTER, artworkScrapers, lblImage, null,
+                    null,
                     MediaType.TV_SHOW);
                 dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
                 dialog.setVisible(true);
@@ -423,7 +424,8 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
                 ImageLabel lblImage = new ImageLabel();
                 List<String> extrathumbs = new ArrayList<>();
                 List<String> extrafanarts = new ArrayList<>();
-                ImageChooserDialog dialog = new ImageChooserDialog(tvShowToScrape.getIds(), ImageType.FANART, artworkScrapers, lblImage, extrathumbs,
+                ImageChooserDialog dialog = new ImageChooserDialog(this, tvShowToScrape.getIds(), ImageType.FANART, artworkScrapers, lblImage,
+                    extrathumbs,
                     extrafanarts, MediaType.TV_SHOW);
                 dialog.setVisible(true);
                 tvShowToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.FANART);
@@ -433,7 +435,8 @@ public class TvShowChooserDialog extends TmmDialog implements ActionListener {
               // banner
               {
                 ImageLabel lblImage = new ImageLabel();
-                ImageChooserDialog dialog = new ImageChooserDialog(tvShowToScrape.getIds(), ImageType.BANNER, artworkScrapers, lblImage, null, null,
+                ImageChooserDialog dialog = new ImageChooserDialog(this, tvShowToScrape.getIds(), ImageType.BANNER, artworkScrapers, lblImage, null,
+                    null,
                     MediaType.TV_SHOW);
                 dialog.setVisible(true);
                 tvShowToScrape.setArtworkUrl(lblImage.getImageUrl(), MediaFileType.BANNER);
