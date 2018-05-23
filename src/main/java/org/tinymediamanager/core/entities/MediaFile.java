@@ -2068,7 +2068,7 @@ public class MediaFile extends AbstractModelObject implements Comparable<MediaFi
     shortname = StringUtils.split(shortname, '/')[0].trim(); // possibly "de / de" - just take first
     for (String s : langArray) {
       try {
-        if (shortname.equalsIgnoreCase(s) || shortname.matches("(?i).*[ _.-]+" + s + "$")) {// ends with lang + delimiter prefix
+        if (shortname.equalsIgnoreCase(s) || shortname.matches("(?i).*[ _.-]+" + Pattern.quote(s) + "$")) {// ends with lang + delimiter prefix
           LOGGER.debug("found language '" + s + "' in '" + this.getFilename());
           return LanguageUtils.getIso3LanguageFromLocalizedString(s);
         }
