@@ -561,7 +561,7 @@ public class TvShowRenamer {
           // shortname = shortname.replaceAll("\\p{Punct}", "").trim(); // NEVER EVER!!!
 
           for (String s : LanguageUtils.KEY_TO_LOCALE_MAP.keySet()) {
-            if (shortname.equalsIgnoreCase(s) || shortname.matches("(?i).*[ _.-]+" + s + "$")) {
+            if (shortname.equalsIgnoreCase(s) || shortname.matches("(?i).*[ _.-]+" + Pattern.quote(s) + "$")) {
               originalLang = s;
               // lang = Utils.getIso3LanguageFromLocalizedString(s);
               // LOGGER.debug("found language '" + s + "' in subtitle; displaying it as '" + lang + "'");

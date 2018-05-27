@@ -180,7 +180,8 @@ public class MovieSetEditorDialog extends TmmDialog {
         HashMap<String, Object> ids = new HashMap<>(movieSetToEdit.getIds());
         ids.put(Constants.TMDB, tmdbId);
         // MovieSetImageChooserDialog dialog = new MovieSetImageChooserDialog(tmdbId, ImageType.POSTER, lblPoster);
-        ImageChooserDialog dialog = new ImageChooserDialog(ids, ImageType.POSTER, artworkScrapers, lblPoster, null, null, MediaType.MOVIE_SET);
+        ImageChooserDialog dialog = new ImageChooserDialog(MovieSetEditorDialog.this, ids, ImageType.POSTER, artworkScrapers, lblPoster, null, null,
+            MediaType.MOVIE_SET);
         dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
         dialog.setVisible(true);
       }
@@ -233,7 +234,8 @@ public class MovieSetEditorDialog extends TmmDialog {
         }
         HashMap<String, Object> ids = new HashMap<>(movieSetToEdit.getIds());
         ids.put(Constants.TMDB, tmdbId);
-        ImageChooserDialog dialog = new ImageChooserDialog(ids, ImageType.FANART, artworkScrapers, lblFanart, null, null, MediaType.MOVIE_SET);
+        ImageChooserDialog dialog = new ImageChooserDialog(MovieSetEditorDialog.this, ids, ImageType.FANART, artworkScrapers, lblFanart, null, null,
+            MediaType.MOVIE_SET);
         dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
         dialog.setVisible(true);
       }
@@ -262,7 +264,8 @@ public class MovieSetEditorDialog extends TmmDialog {
         lblLogo.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieSetToEdit.getIds(), ImageType.LOGO, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieSetEditorDialog.this, movieSetToEdit.getIds(), ImageType.LOGO,
+                movieList.getDefaultArtworkScrapers(),
                 lblLogo, null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -281,7 +284,8 @@ public class MovieSetEditorDialog extends TmmDialog {
         lblClearlogo.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieSetToEdit.getIds(), ImageType.CLEARLOGO, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieSetEditorDialog.this, movieSetToEdit.getIds(), ImageType.CLEARLOGO,
+                movieList.getDefaultArtworkScrapers(),
                 lblClearlogo, null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -301,7 +305,8 @@ public class MovieSetEditorDialog extends TmmDialog {
         lblClearart.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieSetToEdit.getIds(), ImageType.CLEARART, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieSetEditorDialog.this, movieSetToEdit.getIds(), ImageType.CLEARART,
+                movieList.getDefaultArtworkScrapers(),
                 lblClearart, null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -320,7 +325,8 @@ public class MovieSetEditorDialog extends TmmDialog {
         lblBanner.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieSetToEdit.getIds(), ImageType.BANNER, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieSetEditorDialog.this, movieSetToEdit.getIds(), ImageType.BANNER,
+                movieList.getDefaultArtworkScrapers(),
                 lblBanner, null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);

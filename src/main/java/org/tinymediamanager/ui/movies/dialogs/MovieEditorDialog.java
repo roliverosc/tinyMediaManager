@@ -264,7 +264,8 @@ public class MovieEditorDialog extends TmmDialog {
         lblPoster.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieToEdit.getIds(), ImageType.POSTER, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieEditorDialog.this, movieToEdit.getIds(), ImageType.POSTER,
+                movieList.getDefaultArtworkScrapers(),
                 lblPoster, null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -472,7 +473,8 @@ public class MovieEditorDialog extends TmmDialog {
         lblFanart.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieToEdit.getIds(), ImageType.FANART, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieEditorDialog.this, movieToEdit.getIds(), ImageType.FANART,
+                movieList.getDefaultArtworkScrapers(),
                 lblFanart, extrathumbs, extrafanarts, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -756,7 +758,8 @@ public class MovieEditorDialog extends TmmDialog {
         lblLogo.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieToEdit.getIds(), ImageType.LOGO, movieList.getDefaultArtworkScrapers(), lblLogo,
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieEditorDialog.this, movieToEdit.getIds(), ImageType.LOGO,
+                movieList.getDefaultArtworkScrapers(), lblLogo,
                 null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -775,7 +778,8 @@ public class MovieEditorDialog extends TmmDialog {
         lblClearlogo.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieToEdit.getIds(), ImageType.CLEARLOGO, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieEditorDialog.this, movieToEdit.getIds(), ImageType.CLEARLOGO,
+                movieList.getDefaultArtworkScrapers(),
                 lblClearlogo, null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -794,7 +798,8 @@ public class MovieEditorDialog extends TmmDialog {
         lblBanner.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieToEdit.getIds(), ImageType.BANNER, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieEditorDialog.this, movieToEdit.getIds(), ImageType.BANNER,
+                movieList.getDefaultArtworkScrapers(),
                 lblBanner, null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -814,7 +819,8 @@ public class MovieEditorDialog extends TmmDialog {
         lblClearart.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieToEdit.getIds(), ImageType.CLEARART, movieList.getDefaultArtworkScrapers(),
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieEditorDialog.this, movieToEdit.getIds(), ImageType.CLEARART,
+                movieList.getDefaultArtworkScrapers(),
                 lblClearart, null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -833,7 +839,8 @@ public class MovieEditorDialog extends TmmDialog {
         lblThumb.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieToEdit.getIds(), ImageType.THUMB, movieList.getDefaultArtworkScrapers(), lblThumb,
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieEditorDialog.this, movieToEdit.getIds(), ImageType.THUMB,
+                movieList.getDefaultArtworkScrapers(), lblThumb,
                 null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);
@@ -852,7 +859,8 @@ public class MovieEditorDialog extends TmmDialog {
         lblDisc.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            ImageChooserDialog dialog = new ImageChooserDialog(movieToEdit.getIds(), ImageType.DISC, movieList.getDefaultArtworkScrapers(), lblDisc,
+            ImageChooserDialog dialog = new ImageChooserDialog(MovieEditorDialog.this, movieToEdit.getIds(), ImageType.DISC,
+                movieList.getDefaultArtworkScrapers(), lblDisc,
                 null, null, MediaType.MOVIE);
             dialog.setLocationRelativeTo(MainWindow.getActiveInstance());
             dialog.setVisible(true);

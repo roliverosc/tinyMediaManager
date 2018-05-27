@@ -6,6 +6,9 @@ x fixed loading of the TVDB plugin
 x fixed movie renamer $1/$2 tokens (adhere ASCII replacement if set)
 x improved execution of external players (thx to @hampelratte)
 x fixed generation of season poster file name #288
+x fixed displaying of the artwork chooser window on macOS
+x further improved Kodi scrapers
+x fixed actor artwork urls from tvdb scraper
 
 Version 2.9.11
 =======================
